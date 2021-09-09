@@ -15,10 +15,10 @@
         <RepositoryUrl>https://github.com/Reaper1121/SharpToolbox</RepositoryUrl>
         <PackageProjectUrl>https://github.com/Reaper1121/SharpToolbox</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
         <DocumentationFile>SharpToolbox.xml</DocumentationFile>
     </PropertyGroup>
 
