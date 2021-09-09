@@ -20,7 +20,7 @@
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)'=='Release'">
-        <DocumentationFile>SharpToolbox.xml</DocumentationFile>
+        <DocumentationFile>Reaper1121.SharpToolbox.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
