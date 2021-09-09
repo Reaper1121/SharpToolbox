@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <RootNamespace>Reaper1121.SharpToolbox</RootNamespace>
+        <Platforms>x64</Platforms>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Authors>Martynas Skirmantas</Authors>
+        <PackageId>Reaper1121.SharpToolbox</PackageId>
+        <Copyright>Martynas Skirmantas</Copyright>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <Version>0.0.1.0</Version>
+        <PackageTags>MartynasSkirmantas Reaper1121</PackageTags>
+        <Description>This is a personal library that contains various useful things for use.</Description>
+        <RepositoryUrl>https://github.com/Reaper1121/SharpToolbox</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/Reaper1121/SharpToolbox</PackageProjectUrl>
+        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <DocumentationFile>SharpToolbox.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Fody" Version="6.5.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="InlineIL.Fody" Version="1.7.1">
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+
+</Project>
