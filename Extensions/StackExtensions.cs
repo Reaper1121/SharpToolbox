@@ -26,7 +26,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 
-namespace MartynasSkirmantas.SharpToolbox.Extensions {
+namespace Reaper1121.SharpToolbox.Extensions {
 
     [SkipLocalsInit]
     public static class StackExtensions {

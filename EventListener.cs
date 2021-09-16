@@ -29,7 +29,7 @@ using Reaper1121.SharpToolbox.Extensions;
 using Reaper1121.SharpToolbox.Collections;
 using System.Runtime.CompilerServices;
 
-namespace MartynasSkirmantas.SharpToolbox {
+namespace Reaper1121.SharpToolbox {
 
     // TODO: Implement event listener class that supports events with return value
 
