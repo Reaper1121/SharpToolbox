@@ -22,6 +22,7 @@
     SOFTWARE.
 */
 
+using System;
 using System.Runtime.CompilerServices;
 
 namespace Reaper1121.SharpToolbox.Utilities {
@@ -31,6 +32,72 @@ namespace Reaper1121.SharpToolbox.Utilities {
     /// </summary>
     [SkipLocalsInit]
     public static class BitUtils {
+
+        /// <summary>
+        /// Reads bits from specified range
+        /// </summary>
+        /// <param name="Arg_Value">The value to read from</param>
+        /// <param name="Arg_StartBit">Starting bit index</param>
+        /// <param name="Arg_BitCount">The amount of bits to read from starting bit</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint ReadBits(uint Arg_Value, int Arg_StartBit, uint Arg_BitCount) {
+            if (((ulong) Arg_StartBit + Arg_BitCount) <= 32) {
+                return ReadBitsUnsafe(Arg_Value, Arg_StartBit, Arg_BitCount);
+            } else { throw new ArgumentOutOfRangeException(null, Arg_StartBit + Arg_BitCount, $"{nameof(Arg_StartBit)} + {nameof(Arg_BitCount)} is outside value bit range."); }
+        }
+
+        /// <summary>
+        /// Reads bits from specified range without parameter validation
+        /// </summary>
+        /// <param name="Arg_Value">The value to read from</param>
+        /// <param name="Arg_StartBit">Starting bit index</param>
+        /// <param name="Arg_BitCount">The amount of bits to read from starting bit</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint ReadBitsUnsafe(uint Arg_Value, int Arg_StartBit, uint Arg_BitCount) {
+            Arg_BitCount = 32 - Arg_BitCount;
+            Arg_Value >>= Arg_StartBit;
+            Arg_Value <<= (int) Arg_BitCount;
+            Arg_Value >>= (int) Arg_BitCount;
+            return Arg_Value;
+        }
+
+        /// <summary>
+        /// Writes bits to specified range
+        /// </summary>
+        /// <param name="Arg_Value">The value to write to</param>
+        /// <param name="Arg_StartBit">Starting bit index</param>
+        /// <param name="Arg_BitCount">The amount of bits to read from starting bit</param>
+        /// <param name="Arg_Bits">The bits to write of the specified range</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint WriteBits(uint Arg_Value, uint Arg_Bits, int Arg_StartBit, uint Arg_BitCount) {
+            if (((ulong) Arg_StartBit + Arg_BitCount) <= 32) {
+                return WriteBitsUnsafe(Arg_Value, Arg_Bits, Arg_StartBit, Arg_BitCount);
+            } else { throw new ArgumentOutOfRangeException(null, Arg_StartBit + Arg_BitCount, $"{nameof(Arg_StartBit)} + {nameof(Arg_BitCount)} is outside value bit range."); }
+        }
+
+        /// <summary>
+        /// Writes bits to specified range without parameter validation
+        /// </summary>
+        /// <param name="Arg_Value">The value to write to</param>
+        /// <param name="Arg_StartBit">Starting bit index</param>
+        /// <param name="Arg_BitCount">The amount of bits to read from starting bit</param>
+        /// <param name="Arg_Bits">The bits to write of the specified range</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static uint WriteBitsUnsafe(uint Arg_Value, uint Arg_Bits, int Arg_StartBit, uint Arg_BitCount) {
+            Arg_BitCount = 32 - Arg_BitCount;
+            Arg_Bits >>= Arg_StartBit;
+            Arg_Bits <<= (int) Arg_BitCount;
+            Arg_Bits >>= (int) Arg_BitCount - Arg_StartBit;
+            return Arg_Value |= Arg_Bits;
+        }
+
+        public static string ToString(uint Arg_Value) {
+            char[] Func_BitString = new char[32];
+            for (int Loop_Index = 0; Loop_Index < 32; ++Loop_Index) {
+                Func_BitString[Loop_Index] = IsSet(Arg_Value, Loop_Index) ? '1' : '0';
+            }
+            return new string(Func_BitString);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsSet(byte Arg_Value, int Arg_BitIndex) => IsSet((uint) Arg_Value, Arg_BitIndex);

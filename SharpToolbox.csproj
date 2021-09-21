@@ -10,7 +10,7 @@
         <PackageId>Reaper1121.SharpToolbox</PackageId>
         <Copyright>Martynas Skirmantas</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Version>0.0.1.2</Version>
+        <Version>0.0.1.3</Version>
         <PackageTags>MartynasSkirmantas Reaper1121</PackageTags>
         <Description>A 64-Bit cross-platform library supporting .NET 5 and higher of various utitilies and other useful things to help out the development of projects.</Description>
         <RepositoryUrl>https://github.com/Reaper1121/SharpToolbox</RepositoryUrl>

@@ -162,7 +162,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
             return Func_ExitStatus;
         }
 
-        /*public static bool CompareByRef<T>(this T[] Arg_Array1, T[] Arg_Array2, int Arg_ItemCount) where T : class {
+        public static bool CompareByRef<T>(this T[] Arg_Array1, T[] Arg_Array2, int Arg_ItemCount) where T : class {
             bool Func_ExitStatus = true;
             if (Arg_Array1 != Arg_Array2) {
                 if (Arg_Array1 != null && Arg_Array2 != null) {
@@ -177,7 +177,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
                 } else { Func_ExitStatus = false; }
             }
             return Func_ExitStatus;
-        }*/
+        }
 
         public static bool Compare<T>(this T[] Arg_Array1, T[] Arg_Array2) {
             bool Func_ExitStatus = true;
