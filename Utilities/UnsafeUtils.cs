@@ -22,6 +22,7 @@
     SOFTWARE.
 */
 
+using System;
 using System.Runtime.CompilerServices;
 using InlineIL;
 
@@ -34,34 +35,21 @@ namespace Reaper1121.SharpToolbox.Utilities {
     public static class UnsafeUtils {
 
         /// <summary>
-        /// Stores a object to the specified address
+        /// Checks if a generic reference-type object is null
         /// </summary>
-        /// <typeparam name="T">The type of the address</typeparam>
-        /// <param name="Arg_StoreAddress">The address to store the object</param>
-        /// <param name="Arg_Object">The object to store to a address</param>
+        /// <typeparam name="T">Generic reference-type object</typeparam>
+        /// <param name="Arg_Object">The generic reference-type object that may be null.</param>
+        /// <exception cref="InvalidProgramException">The generic object type is not a reference-type.</exception>
+        /// <returns><see langword="true"/> when the object reference is null.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void StoreReferenceAtAddress<T>(ref T Arg_StoreAddress, object Arg_Object) {
-            IL.Emit.Ldarg(nameof(Arg_StoreAddress));
-            IL.Emit.Ldarg(nameof(Arg_Object));
-            IL.Emit.Stind_Ref();
-            IL.Emit.Ret();
-            throw IL.Unreachable();
-        }
-
-        /// <summary>
-        /// Stores a value type object to the specified address
-        /// </summary>
-        /// <typeparam name="AT">The type of the address</typeparam>
-        /// <typeparam name="VT">The value type of the object</typeparam>
-        /// <param name="Arg_StoreAddress">The address to store the object</param>
-        /// <param name="Arg_Value">The value type object to store to a address</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void StoreValueAtAddress<AT, VT>(ref AT Arg_StoreAddress, VT Arg_Value) where VT : struct {
-            IL.Emit.Ldarg(nameof(Arg_StoreAddress));
-            IL.Emit.Ldarg(nameof(Arg_Value));
-            IL.Emit.Stobj<VT>();
-            IL.Emit.Ret();
-            throw IL.Unreachable();
+        public static bool IsNull<T>(T? Arg_Object) {
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>() == false) {
+                throw new InvalidProgramException("The unsafe method expected a reference-type generic object!");
+            }
+            IL.Push(Arg_Object);
+            IL.Emit.Ldnull();
+            IL.Emit.Ceq();
+            return IL.Return<bool>();
         }
 
         /// <summary>
@@ -90,7 +78,7 @@ namespace Reaper1121.SharpToolbox.Utilities {
         /// <returns>The object address of destination type</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref DT Reinterpret<ST, DT>(ref ST Arg_Object) {
-            IL.Push(ref Arg_Object);
+            IL.Push(ref Arg_Object!);
             return ref IL.ReturnRef<DT>();
         }
 

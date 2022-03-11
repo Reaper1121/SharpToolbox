@@ -64,21 +64,21 @@ namespace Reaper1121.SharpToolbox {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static explicit operator T[](GCMemory<T> Arg_GCMemory) => Arg_GCMemory?.Memory;
+        public static explicit operator T[]?(GCMemory<T>? Arg_GCMemory) => Arg_GCMemory?.Memory;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator T*(GCMemory<T> Arg_GCMemory) => Arg_GCMemory != null ? Arg_GCMemory.UnsafePointer : null;
+        public static implicit operator T*(GCMemory<T>? Arg_GCMemory) => Arg_GCMemory != null ? Arg_GCMemory.UnsafePointer : null;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator IntPtr(GCMemory<T> Arg_GCMemory) => Arg_GCMemory != null ? new IntPtr(Arg_GCMemory.UnsafePointer) : IntPtr.Zero;
+        public static implicit operator IntPtr(GCMemory<T>? Arg_GCMemory) => Arg_GCMemory != null ? new IntPtr(Arg_GCMemory.UnsafePointer) : IntPtr.Zero;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator UIntPtr(GCMemory<T> Arg_GCMemory) => Arg_GCMemory != null ? new UIntPtr(Arg_GCMemory.UnsafePointer) : UIntPtr.Zero;
+        public static implicit operator UIntPtr(GCMemory<T>? Arg_GCMemory) => Arg_GCMemory != null ? new UIntPtr(Arg_GCMemory.UnsafePointer) : UIntPtr.Zero;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator nuint(GCMemory<T> Arg_GCMemory) => Arg_GCMemory != null ? (nuint) Arg_GCMemory.UnsafePointer : 0;
+        public static implicit operator nuint(GCMemory<T>? Arg_GCMemory) => Arg_GCMemory != null ? (nuint) Arg_GCMemory.UnsafePointer : 0;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator nint(GCMemory<T> Arg_GCMemory) => Arg_GCMemory != null ? (nint) Arg_GCMemory.UnsafePointer : 0;
+        public static implicit operator nint(GCMemory<T>? Arg_GCMemory) => Arg_GCMemory != null ? (nint) Arg_GCMemory.UnsafePointer : 0;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator ulong(GCMemory<T> Arg_GCMemory) => Arg_GCMemory != null ? (ulong) Arg_GCMemory.UnsafePointer : 0;
+        public static implicit operator ulong(GCMemory<T>? Arg_GCMemory) => Arg_GCMemory != null ? (ulong) Arg_GCMemory.UnsafePointer : 0;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator long(GCMemory<T> Arg_GCMemory) => Arg_GCMemory != null ? (long) Arg_GCMemory.UnsafePointer : 0;
+        public static implicit operator long(GCMemory<T>? Arg_GCMemory) => Arg_GCMemory != null ? (long) Arg_GCMemory.UnsafePointer : 0;
 
     }
 

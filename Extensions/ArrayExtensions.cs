@@ -53,7 +53,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
         public static T[] Clone<T>(this T[] Arg_Array) => UnsafeUtils.Reinterpret<object, T[]>(Arg_Array.Clone());
 
         /// <summary>
-        /// Converts the array type to a different type without making a copy/clone of the array.
+        /// Converts the array compile-time type to a different type without making a copy/clone of the array.
         /// </summary>
         /// <typeparam name="ST">Source array element type</typeparam>
         /// <typeparam name="DT">Destination array element type </typeparam>
@@ -63,7 +63,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
             if (Arg_SourceArray != null) {
                 if (typeof(DT) != typeof(ST)) {
                     for (int Loop_Index = Arg_SourceArray.Length - 1; Loop_Index != -1; --Loop_Index) {
-                        object Loop_SourceObject = UnsafeUtils.Reinterpret<ST, object>(Arg_SourceArray[Loop_Index]);
+                        object? Loop_SourceObject = UnsafeUtils.Reinterpret<ST, object>(Arg_SourceArray[Loop_Index]);
                         if (Loop_SourceObject != null && Loop_SourceObject.GetType() != typeof(DT)) {
                             throw new InvalidCastException("The source array has a object that is not of destination type!");
                         }
@@ -102,13 +102,13 @@ namespace Reaper1121.SharpToolbox.Extensions {
             if (Arg_SourceArray != null) {
                 DT[] Func_ConvertedArray = new DT[Arg_SourceArray.Length];
                 for (int Loop_Index = Arg_SourceArray.Length - 1; Loop_Index != -1; --Loop_Index) {
-                    ST Loop_SourceItem = Arg_SourceArray[Loop_Index];
+                    object? Loop_SourceItem = UnsafeUtils.Reinterpret<ST, object?>(Arg_SourceArray[Loop_Index]);
                     if (Loop_SourceItem != null) {
                         if (Loop_SourceItem.GetType() == typeof(DT)) {
                             IL.Push(Func_ConvertedArray);
                             IL.Push(Loop_Index);
                             IL.Push(Loop_SourceItem);
-                            IL.Emit.Stelem_Any<DT>();
+                            IL.Emit.Stelem_Any<DT?>();
                         } else { throw new InvalidCastException("The source array has a object that is not of destination type!"); }
                     }
                 }
@@ -147,104 +147,52 @@ namespace Reaper1121.SharpToolbox.Extensions {
         /// <param name="Arg_Array1">The first compared array</param>
         /// <param name="Arg_Array2">The second compared array</param>
         /// <returns><see langword="true"/> when the compared arrays match!</returns>
-        public static bool CompareByRef<T>(this T[] Arg_Array1, T[] Arg_Array2) where T : class {
-            bool Func_ExitStatus = true;
-            if (Arg_Array1 != Arg_Array2) {
-                if (Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Length == Arg_Array2.Length) {
-                    for (int Loop_Index = Arg_Array1.Length - 1; Loop_Index != -1; --Loop_Index) {
-                        if (ReferenceEquals(UnsafeUtils.Reinterpret<T, object>(Arg_Array1[Loop_Index]), UnsafeUtils.Reinterpret<T, object>(Arg_Array2[Loop_Index])) == false) {
-                            Func_ExitStatus = false;
-                            break;
-                        }
+        public static bool CompareByRef<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2) where T : class {
+            bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
+            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count == Arg_Array2.Count) == true) {
+                for (int Loop_Index = Arg_Array1!.Count - 1; Loop_Index != -1; --Loop_Index) {
+                    if (ReferenceEquals(UnsafeUtils.Reinterpret<T, object?>(Arg_Array1[Loop_Index]), UnsafeUtils.Reinterpret<T, object?>(Arg_Array2![Loop_Index])) == false) {
+                        Func_ExitStatus = false;
+                        break;
                     }
-                } else { Func_ExitStatus = false; }
+                }
             }
             return Func_ExitStatus;
         }
-
-        public static bool CompareByRef<T>(this T[] Arg_Array1, T[] Arg_Array2, int Arg_ItemCount) where T : class {
-            bool Func_ExitStatus = true;
-            if (Arg_Array1 != Arg_Array2) {
-                if (Arg_Array1 != null && Arg_Array2 != null) {
-                    if (Arg_Array1.Length >= Arg_ItemCount && Arg_Array2.Length >= Arg_ItemCount) {
-                        for (--Arg_ItemCount; Arg_ItemCount != -1; --Arg_ItemCount) {
-                            if (ReferenceEquals(UnsafeUtils.Reinterpret<T, object>(Arg_Array1[Arg_ItemCount]), UnsafeUtils.Reinterpret<T, object>(Arg_Array2[Arg_ItemCount])) == false) {
-                                Func_ExitStatus = false;
-                                break;
-                            }
-                        }
-                    } else { Func_ExitStatus = false; }
-                } else { Func_ExitStatus = false; }
-            }
-            return Func_ExitStatus;
-        }
-
-        public static bool Compare<T>(this T[] Arg_Array1, T[] Arg_Array2) {
-            bool Func_ExitStatus = true;
-            if (Arg_Array1 != Arg_Array2) {
-                if (Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Length == Arg_Array2.Length) {
-                    EqualityComparer<T> Func_ValueComparer = EqualityComparer<T>.Default;
-                    for (int Loop_Index = Arg_Array1.Length - 1; Loop_Index != -1; --Loop_Index) {
-                        if (Func_ValueComparer.Equals(Arg_Array1[Loop_Index], Arg_Array2[Loop_Index]) == false) {
-                            Func_ExitStatus = false;
-                            break;
-                        }
-                    }
-                } else { Func_ExitStatus = false; }
-            }
-            return Func_ExitStatus;
-        }
-
-        public static bool Compare<T>(this T[] Arg_Array1, T[] Arg_Array2, int Arg_ItemCount) {
-            bool Func_ExitStatus = true;
-            if (Arg_Array1 != Arg_Array2) {
-                Func_ExitStatus = false;
-                if (Arg_Array1 != null && Arg_Array2 != null) {
-                    if (Arg_Array1.Length >= Arg_ItemCount && Arg_Array2.Length >= Arg_ItemCount) {
-                        Func_ExitStatus = true;
-                        EqualityComparer<T> Func_ValueComparer = EqualityComparer<T>.Default;
-                        for (--Arg_ItemCount; Arg_ItemCount != -1; --Arg_ItemCount) {
-                            if (Func_ValueComparer.Equals(Arg_Array1[Arg_ItemCount], Arg_Array2[Arg_ItemCount]) == false) {
-                                Func_ExitStatus = false;
-                                break;
-                            }
-                        }
+        public static bool CompareByRef<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2, int Arg_ItemCount) where T : class {
+            bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
+            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count <= Arg_ItemCount && Arg_Array2.Count <= Arg_ItemCount) == true) {
+                for (--Arg_ItemCount; Arg_ItemCount != -1; --Arg_ItemCount) {
+                    if (ReferenceEquals(UnsafeUtils.Reinterpret<T, object?>(Arg_Array1![Arg_ItemCount]), UnsafeUtils.Reinterpret<T, object?>(Arg_Array2![Arg_ItemCount])) == false) {
+                        Func_ExitStatus = false;
+                        break;
                     }
                 }
             }
             return Func_ExitStatus;
         }
 
-        public static bool Compare<T>(this T[] Arg_Array1, Span<T> Arg_Array2) {
-            bool Func_ExitStatus = true;
-            if (Arg_Array1 != Arg_Array2) {
-                if (Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Length == Arg_Array2.Length) {
-                    EqualityComparer<T> Func_ValueComparer = EqualityComparer<T>.Default;
-                    for (int Loop_Index = Arg_Array1.Length - 1; Loop_Index != -1; --Loop_Index) {
-                        if (Func_ValueComparer.Equals(Arg_Array1[Loop_Index], Arg_Array2[Loop_Index]) == false) {
-                            Func_ExitStatus = false;
-                            break;
-                        }
+        public static bool Compare<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2) {
+            bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
+            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count == Arg_Array2.Count) == true) {
+                EqualityComparer<T> Func_ValueComparer = EqualityComparer<T>.Default;
+                for (int Loop_Index = Arg_Array1!.Count - 1; Loop_Index != -1; --Loop_Index) {
+                    if (Func_ValueComparer.Equals(Arg_Array1[Loop_Index], Arg_Array2![Loop_Index]) == false) {
+                        Func_ExitStatus = false;
+                        break;
                     }
-                } else { Func_ExitStatus = false; }
+                }
             }
             return Func_ExitStatus;
         }
-
-        public static bool Compare<T>(this T[] Arg_Array1, Span<T> Arg_Array2, int Arg_ItemCount) {
-            bool Func_ExitStatus = true;
-            if (Arg_Array1 != Arg_Array2) {
-                Func_ExitStatus = false;
-                if (Arg_Array1 != null && Arg_Array2 != null) {
-                    if (Arg_Array1.Length >= Arg_ItemCount && Arg_Array2.Length >= Arg_ItemCount) {
-                        Func_ExitStatus = true;
-                        EqualityComparer<T> Func_ValueComparer = EqualityComparer<T>.Default;
-                        for (--Arg_ItemCount; Arg_ItemCount != -1; --Arg_ItemCount) {
-                            if (Func_ValueComparer.Equals(Arg_Array1[Arg_ItemCount], Arg_Array2[Arg_ItemCount]) == false) {
-                                Func_ExitStatus = false;
-                                break;
-                            }
-                        }
+        public static bool Compare<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2, int Arg_ItemCount) {
+            bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
+            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count >= Arg_ItemCount && Arg_Array2.Count >= Arg_ItemCount) == true) {
+                EqualityComparer<T> Func_ValueComparer = EqualityComparer<T>.Default;
+                for (--Arg_ItemCount; Arg_ItemCount != -1; --Arg_ItemCount) {
+                    if (Func_ValueComparer.Equals(Arg_Array1![Arg_ItemCount], Arg_Array2![Arg_ItemCount]) == false) {
+                        Func_ExitStatus = false;
+                        break;
                     }
                 }
             }
@@ -258,39 +206,25 @@ namespace Reaper1121.SharpToolbox.Extensions {
         /// <param name="Arg_Array1">The first compared array</param>
         /// <param name="Arg_Array2">The second compared array</param>
         /// <returns><see langword="true"/> when the compared arrays match!</returns>
-        public static bool CompareEquatable<T>(this T[] Arg_Array1, T[] Arg_Array2) where T : IEquatable<T> {
-            bool Func_ExitStatus = true;
-            if (Arg_Array1 != Arg_Array2) {
-                if (Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.LongLength == Arg_Array2.LongLength) {
-                    for (long Loop_Index = Arg_Array1.LongLength - 1; Loop_Index != -1; --Loop_Index) {
-                        if (Arg_Array1[Loop_Index].Equals(Arg_Array2[Loop_Index]) == false) {
+        public static bool CompareEquatable<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2) where T : IEquatable<T> {
+            bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
+            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count == Arg_Array2.Count) == true) {
+                for (int Loop_Index = Arg_Array1!.Count - 1; Loop_Index != -1; --Loop_Index) {
+                    if (RuntimeHelpers.IsReferenceOrContainsReferences<T>() == true) {
+                        IEquatable<T> Loop_CompareObject = UnsafeUtils.Reinterpret<T, IEquatable<T>>(Arg_Array1[Loop_Index]);
+                        if (Loop_CompareObject != null) {
+                            if (Loop_CompareObject.Equals(Arg_Array2![Loop_Index]) == false) {
+                                Func_ExitStatus = false;
+                                break;
+                            }
+                        }
+                    } else {
+                        if (Arg_Array1[Loop_Index].Equals(Arg_Array2![Loop_Index]) == false) {
                             Func_ExitStatus = false;
                             break;
                         }
                     }
-                } else { Func_ExitStatus = false; }
-            }
-            return Func_ExitStatus;
-        }
-
-        /// <summary>
-        /// Compares if the array of a IEquatable element type is a exact match! This includes array length.
-        /// </summary>
-        /// <typeparam name="T">Array element type</typeparam>
-        /// <param name="Arg_Array1">The first compared array</param>
-        /// <param name="Arg_Array2">The second compared span array</param>
-        /// <returns><see langword="true"/> when the compared arrays match!</returns>
-        public static bool CompareEquatable<T>(this T[] Arg_Array1, Span<T> Arg_Array2) where T : IEquatable<T> {
-            bool Func_ExitStatus = true;
-            if (Arg_Array1 != Arg_Array2) {
-                if (Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Length == Arg_Array2.Length) {
-                    for (int Loop_Index = Arg_Array1.Length - 1; Loop_Index != -1; --Loop_Index) {
-                        if (Arg_Array1[Loop_Index].Equals(Arg_Array2[Loop_Index]) == false) {
-                            Func_ExitStatus = false;
-                            break;
-                        }
-                    }
-                } else { Func_ExitStatus = false; }
+                }
             }
             return Func_ExitStatus;
         }

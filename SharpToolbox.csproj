@@ -4,15 +4,16 @@
         <TargetFramework>net5.0</TargetFramework>
         <RootNamespace>Reaper1121.SharpToolbox</RootNamespace>
         <Platforms>x64</Platforms>
+        <Nullable>enable</Nullable>
         <AssemblyName>Reaper1121.SharpToolbox</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Authors>Martynas Skirmantas</Authors>
         <PackageId>Reaper1121.SharpToolbox</PackageId>
         <Copyright>Martynas Skirmantas</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Version>0.0.1.3</Version>
+        <Version>0.0.1.4</Version>
         <PackageTags>MartynasSkirmantas Reaper1121</PackageTags>
-        <Description>A 64-Bit cross-platform library supporting .NET 5 and higher of various utitilies and other useful things to help out the development of projects.</Description>
+        <Description>A 64-Bit cross-platform library for .NET 5 and higher of various utitilies and other useful things to help out the development of projects.</Description>
         <RepositoryUrl>https://github.com/Reaper1121/SharpToolbox</RepositoryUrl>
         <PackageProjectUrl>https://github.com/Reaper1121/SharpToolbox</PackageProjectUrl>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
@@ -24,7 +25,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Fody" Version="6.5.2">
+      <Compile Remove="EventListener.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="EventListener.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Fody" Version="6.6.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

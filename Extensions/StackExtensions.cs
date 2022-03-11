@@ -41,7 +41,8 @@ namespace Reaper1121.SharpToolbox.Extensions {
         /// <exception cref="OutOfMemoryException"></exception>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ConstrainedPushRange<T>(this Stack<T> Arg_SourceStack, T[] Arg_Items) {
-            if (Arg_Items == null) { throw new ArgumentNullException(nameof(Arg_Items)); }
+            _ = Arg_SourceStack ?? throw new ArgumentNullException(nameof(Arg_SourceStack));
+            _ = Arg_Items ?? throw new ArgumentNullException(nameof(Arg_Items));
             ConstrainedPushRange(Arg_SourceStack, Arg_Items, Arg_Items.Length);
         }
 
@@ -56,9 +57,9 @@ namespace Reaper1121.SharpToolbox.Extensions {
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         /// <exception cref="OutOfMemoryException"></exception>
         public static void ConstrainedPushRange<T>(this Stack<T> Arg_SourceStack, T[] Arg_Items, int Arg_ItemCount) {
-            if (Arg_SourceStack == null) { throw new ArgumentNullException(nameof(Arg_SourceStack)); }
+            _ = Arg_SourceStack ?? throw new ArgumentNullException(nameof(Arg_SourceStack));
+            _ = Arg_Items ?? throw new ArgumentNullException(nameof(Arg_Items));
             if (Arg_ItemCount > 0) {
-                if (Arg_Items == null) { throw new ArgumentNullException(nameof(Arg_Items)); }
                 if (Arg_Items.Length < Arg_ItemCount) { throw new ArgumentOutOfRangeException(nameof(Arg_ItemCount), Arg_ItemCount, "The item count is greater than the items array length!"); }
                 uint Func_PushedItems = 0;
                 try {
@@ -68,7 +69,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
                     }
                 } catch {
                     for (; Func_PushedItems != 0; --Func_PushedItems) {
-                        Arg_SourceStack.TryPop(out T unused);
+                        Arg_SourceStack.TryPop(out T _);
                     }
                     throw;
                 }
@@ -84,11 +85,11 @@ namespace Reaper1121.SharpToolbox.Extensions {
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
         public static void Pop<T>(this Stack<T> Arg_SourceStack, int Arg_ItemCount) {
-            if (Arg_SourceStack == null) { throw new ArgumentNullException(nameof(Arg_SourceStack)); }
+            _ = Arg_SourceStack ?? throw new ArgumentNullException(nameof(Arg_SourceStack));
             if (Arg_ItemCount > 0) {
                 if (Arg_SourceStack.Count < Arg_ItemCount) { throw new ArgumentOutOfRangeException(nameof(Arg_ItemCount), Arg_ItemCount, "The item count is greater than the stack count!"); }
                 for (; Arg_ItemCount != 0; --Arg_ItemCount) {
-                    Arg_SourceStack.TryPop(out T unused);
+                    Arg_SourceStack.TryPop(out T _);
                 }
             }
         }

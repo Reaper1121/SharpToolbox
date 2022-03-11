@@ -33,7 +33,7 @@ namespace Reaper1121.SharpToolbox.Collections {
     public sealed class ConcurrentCircularBuffer<T> : ICircularBuffer<T> {
 
         public bool IsSynchronized => true;
-        public object SyncRoot => throw new NotSupportedException("The synchronisation is done only internally by the concurrent circular buffer!");
+        public object SyncRoot => throw new NotSupportedException("The synchronisation is done internally by the concurrent circular buffer!");
 
         private readonly object PushLock = new object();
         private readonly object PopLock = new object();
@@ -77,11 +77,11 @@ namespace Reaper1121.SharpToolbox.Collections {
         public ConcurrentCircularBuffer(int Arg_Capacity) {
             if (Arg_Capacity > 2) {
                 _Capacity = Arg_Capacity;
-                _Buffer = new T[Arg_Capacity];
                 LastItem = Arg_Capacity - 1;
                 LastPoppedItem = Arg_Capacity - 1;
+                _Buffer = new T[Arg_Capacity];
                 AvailableItemSemaphore = new SemaphoreSlim(0, Arg_Capacity);
-            } else { throw new ArgumentOutOfRangeException("The capacity must be at least of 2!"); }
+            } else { throw new ArgumentOutOfRangeException(nameof(Arg_Capacity), "The capacity must be at least of 2!"); }
         }
 
         public void Push(T Arg_Item) {
@@ -128,13 +128,13 @@ namespace Reaper1121.SharpToolbox.Collections {
                     int Func_NextPopItem = LastPoppedItem + 1;
                     if (Func_NextPopItem == _Capacity) { Func_NextPopItem = 0; }
                     Arg_Item = _Buffer[Func_NextPopItem];
-                    if (System.Runtime.CompilerServices.RuntimeHelpers.IsReferenceOrContainsReferences<T>() == true) { _Buffer[Func_NextPopItem] = default; }
+                    if (System.Runtime.CompilerServices.RuntimeHelpers.IsReferenceOrContainsReferences<T>() == true) { _Buffer[Func_NextPopItem] = default!; }
                     Interlocked.Decrement(ref _Count);
                     LastPoppedItem = Func_NextPopItem;
                     Monitor.Exit(PopLock);
                     Func_ExitStatus = true;
                 } else {
-                    Arg_Item = default;
+                    Arg_Item = default!;
                     Func_ExitStatus = false;
                 }
                 return Func_ExitStatus;

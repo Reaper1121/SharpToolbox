@@ -35,21 +35,18 @@ namespace Reaper1121.SharpToolbox.Extensions {
         public static string ReadEmbeddedResource(this Assembly Arg_Assembly, string Arg_ResourceName, Encoding Arg_TextEncoding) => Arg_TextEncoding != null ? Arg_TextEncoding.GetString(ReadEmbeddedResource(Arg_Assembly, Arg_ResourceName)) : throw new ArgumentNullException(nameof(Arg_TextEncoding));
 
         public static byte[] ReadEmbeddedResource(this Assembly Arg_Assembly, string Arg_ResourceName) {
-            if (Arg_Assembly != null) {
-                if (Arg_ResourceName != null) {
-                    byte[] Func_ResourceBinary = null;
-                    ManifestResourceInfo Func_ResourceInfo = Arg_Assembly.GetManifestResourceInfo(Arg_ResourceName);
-                    if (Func_ResourceInfo != null && Func_ResourceInfo.ResourceLocation != ResourceLocation.ContainedInAnotherAssembly) {
-                        using System.IO.Stream Func_ResourceStream = Arg_Assembly.GetManifestResourceStream(Arg_ResourceName);
-                        Func_ResourceBinary = new byte[Func_ResourceStream.Length];
-                        int Func_ReadByteCount = Func_ResourceStream.Read(Func_ResourceBinary, 0, Func_ResourceBinary.Length);
-                        if (Func_ReadByteCount != Func_ResourceBinary.Length && Func_ReadByteCount != 0) {
-                            Array.Resize(ref Func_ResourceBinary, Func_ReadByteCount);
-                        }
-                    }
-                    return Func_ResourceBinary;
-                } else { throw new ArgumentNullException(nameof(Arg_ResourceName)); }
-            } else { throw new ArgumentNullException(nameof(Arg_Assembly)); }
+            _ = Arg_Assembly ?? throw new ArgumentNullException(nameof(Arg_Assembly));
+            _ = Arg_ResourceName ?? throw new ArgumentNullException(nameof(Arg_ResourceName));
+            ManifestResourceInfo? Func_ResourceInfo = Arg_Assembly.GetManifestResourceInfo(Arg_ResourceName);
+            if (Func_ResourceInfo != null && Func_ResourceInfo.ResourceLocation != ResourceLocation.ContainedInAnotherAssembly) {
+                using System.IO.Stream Func_ResourceStream = Arg_Assembly.GetManifestResourceStream(Arg_ResourceName)!;
+                byte[]? Func_ResourceBinary = new byte[Func_ResourceStream.Length];
+                int Func_ReadByteCount = Func_ResourceStream.Read(Func_ResourceBinary, 0, Func_ResourceBinary.Length);
+                if (Func_ReadByteCount != Func_ResourceBinary.Length && Func_ReadByteCount != 0) {
+                    Array.Resize(ref Func_ResourceBinary, Func_ReadByteCount);
+                }
+                return Func_ResourceBinary;
+            } else { throw new System.IO.FileNotFoundException("The embedded resource was not found!"); }
         }
 
     }

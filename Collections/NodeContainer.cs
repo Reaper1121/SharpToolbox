@@ -1,4 +1,5 @@
-﻿/*
+﻿#nullable disable
+/*
     MIT License
 
     Copyright (C) 2021 Martynas Skirmantas https://github.com/Reaper1121/SharpToolbox
@@ -143,8 +144,8 @@ namespace Reaper1121.SharpToolbox.Collections {
                                                 if (_Root == Arg_Parent._Root) {
                                                     _Root.MoveNodeWithChildren(Index, Arg_Parent.Index);
                                                 } else {
-                                                    Arg_Parent._Root.Nodes.Insert(_Root.Nodes, Func_TreeNodeCount, Index, Arg_Parent.Index + Arg_Parent._ChildCount + 1);
-                                                    _Root.Nodes.Remove(Index, Func_TreeNodeCount);
+                                                    Arg_Parent._Root.Nodes.InsertRange(_Root.Nodes, Func_TreeNodeCount, Index, Arg_Parent.Index + Arg_Parent._ChildCount + 1);
+                                                    _Root.Nodes.RemoveAt(Index, Func_TreeNodeCount);
                                                     Arg_Parent._Root.UpdateNodeIndicies(Arg_Parent.Index + 1);
                                                     UpdateNodeRoot(Arg_Parent._Root);
                                                     _Container = Arg_Parent._Root._Container;
@@ -172,8 +173,8 @@ namespace Reaper1121.SharpToolbox.Collections {
                                 Node[] Func_OldParentNodes = Parents;
                                 try {
                                     int Func_TreeNodeCount = _ChildCount + 1;
-                                    Nodes.Insert(_Root.Nodes, Func_TreeNodeCount, Index, 0);
-                                    _Root.Nodes.Remove(Index, Func_TreeNodeCount);
+                                    Nodes.InsertRange(_Root.Nodes, Func_TreeNodeCount, Index, 0);
+                                    _Root.Nodes.RemoveAt(Index, Func_TreeNodeCount);
                                     _Parent = null;
                                     _Container = null;
                                     UpdateNodeIndicies(0);
@@ -244,12 +245,12 @@ namespace Reaper1121.SharpToolbox.Collections {
                         int Func_MoveNodeCount = Func_SourceNode._ChildCount + 1;
                         Node[] Func_MoveNodes = new Node[Func_MoveNodeCount];
                         Func_Nodes.CopyTo(Arg_SourceIndex, Func_MoveNodes, 0, Func_MoveNodeCount);
-                        Func_Nodes.Remove(Arg_SourceIndex, Func_MoveNodeCount);
+                        Func_Nodes.RemoveAt(Arg_SourceIndex, Func_MoveNodeCount);
                         try {
                             if (Arg_DestinationIndex < Arg_SourceIndex) {
-                                Func_Nodes.Insert(Func_MoveNodes, Func_MoveNodeCount, Arg_DestinationIndex + Func_DestinationNode._ChildCount + 1);
+                                Func_Nodes.InsertRange(Func_MoveNodes, Func_MoveNodeCount, Arg_DestinationIndex + Func_DestinationNode._ChildCount + 1);
                             } else {
-                                Func_Nodes.Insert(Func_MoveNodes, Func_MoveNodeCount, (Arg_DestinationIndex + Func_DestinationNode._ChildCount + 1) - Func_MoveNodeCount);
+                                Func_Nodes.InsertRange(Func_MoveNodes, Func_MoveNodeCount, (Arg_DestinationIndex + Func_DestinationNode._ChildCount + 1) - Func_MoveNodeCount);
                             }
                             for (int Loop_Index = ((Arg_DestinationIndex < Arg_SourceIndex) ? Func_DestinationNode : Func_SourceNode).Index; Loop_Index < Func_NodeCount; ++Loop_Index) { Func_Nodes[Loop_Index].Index = Loop_Index; }
                         } catch (Exception Func_Exception) { Environment.FailFast(null, Func_Exception); throw; }
@@ -347,7 +348,7 @@ namespace Reaper1121.SharpToolbox.Collections {
 
             public void CopyChildren(FastList<NT> Arg_DestinationList, int Arg_DestinationIndex) {
                 if (Arg_DestinationList != null) {
-                    Arg_DestinationList.Insert(UnsafeUtils.Reinterpret<FastList<Node>, FastList<NT>>(Nodes), _ChildCount, Index + 1, Arg_DestinationIndex);
+                    Arg_DestinationList.InsertRange(UnsafeUtils.Reinterpret<FastList<Node>, FastList<NT>>(Nodes), _ChildCount, Index + 1, Arg_DestinationIndex);
                 } else { throw new ArgumentNullException(nameof(Arg_DestinationList)); }
             }
 

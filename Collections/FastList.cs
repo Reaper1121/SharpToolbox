@@ -95,67 +95,62 @@ namespace Reaper1121.SharpToolbox.Collections {
                 Func_Items[Func_Count] = Arg_Item;
                 return;
             }
-            Add_AddWithResize(Arg_Item);
+            AddWithResize(Arg_Item);
+
+            [MethodImpl(MethodImplOptions.NoInlining)]
+            void AddWithResize(T Arg_Item) {
+                T[] Func_ListItems = new T[Items.Length * 2];
+                Array.Copy(Items, 0, Func_ListItems, 0, _Count);
+                Items = Func_ListItems;
+                Func_ListItems[_Count++] = Arg_Item;
+            }
+
         }
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private void Add_AddWithResize(T Arg_Item) {
-            T[] Func_ListItems = new T[Items.Length * 2];
-            Array.Copy(Items, 0, Func_ListItems, 0, _Count);
-            Items = Func_ListItems;
-            Func_ListItems[_Count++] = Arg_Item;
+        public void AddRange(T[] Arg_Items) {
+            _ = Arg_Items ?? throw new ArgumentNullException(nameof(Arg_Items));
+            int Func_ItemsLength = Arg_Items.Length;
+            if (Func_ItemsLength != 0) {
+                EnsureCapacity(_Count + Func_ItemsLength);
+                Array.Copy(Arg_Items, 0, Items, _Count, Func_ItemsLength);
+                _Count += Func_ItemsLength;
+            }
+        }
+        public void AddRange(IList<T> Arg_Items) {
+            _ = Arg_Items ?? throw new ArgumentNullException(nameof(Arg_Items));
+            int Func_ItemsCount = Arg_Items.Count;
+            if (Func_ItemsCount != 0) {
+                EnsureCapacity(_Count + Func_ItemsCount);
+                Arg_Items.CopyTo(Items, _Count);
+                _Count += Func_ItemsCount;
+            }
         }
 
-        public void Add(T[] Arg_Items) {
-            if (Arg_Items != null) {
-                int Func_ItemsLength = Arg_Items.Length;
-                if (Func_ItemsLength != 0) {
-                    EnsureCapacity(_Count + Func_ItemsLength);
-                    Array.Copy(Arg_Items, 0, Items, _Count, Func_ItemsLength);
-                    _Count += Func_ItemsLength;
-                }
-            } else { throw new ArgumentNullException(nameof(Arg_Items)); }
+        public void AddRange(T[] Arg_Items, int Arg_StartIndex, int Arg_ItemCount) {
+            _ = Arg_Items ?? throw new ArgumentNullException(nameof(Arg_Items));
+            int Func_ItemsLength = Arg_Items.Length;
+            if (Arg_ItemCount > -1 && Arg_ItemCount <= Func_ItemsLength) {
+                if ((uint) Arg_StartIndex < (uint) Func_ItemsLength) {
+                    if (Arg_StartIndex + Arg_ItemCount < Func_ItemsLength) {
+                        EnsureCapacity(Items.Length + Arg_ItemCount);
+                        Array.Copy(Arg_Items, 0, Items, _Count, Arg_ItemCount);
+                        _Count += Arg_ItemCount;
+                    } else { throw new ArgumentException("The start index + item count cannot be greater than item array length!", nameof(Arg_Items)); }
+                } else { throw new ArgumentOutOfRangeException(nameof(Arg_StartIndex), Arg_StartIndex, "The start index cannot be negative or greater than item array length!"); }
+            } else { throw new ArgumentOutOfRangeException(nameof(Arg_ItemCount), Arg_ItemCount, "The item count cannot be greater than item array length or negative!"); }
         }
-
-        public void Add(FastList<T> Arg_Items) {
-            if (Arg_Items != null) {
-                int Func_ItemsCount = Arg_Items._Count;
-                if (Func_ItemsCount != 0) {
-                    EnsureCapacity(_Count + Func_ItemsCount);
-                    Array.Copy(Arg_Items.Items, 0, Items, _Count, Func_ItemsCount);
-                    _Count += Func_ItemsCount;
-                }
-            } else { throw new ArgumentNullException(nameof(Arg_Items)); }
-        }
-
-        public void Add(T[] Arg_Items, int Arg_StartIndex, int Arg_ItemCount) {
-            if (Arg_Items != null) {
-                int Func_ItemsLength = Arg_Items.Length;
-                if (Arg_ItemCount > -1 && Arg_ItemCount <= Func_ItemsLength) {
-                    if ((uint) Arg_StartIndex < (uint) Func_ItemsLength) {
-                        if (Arg_StartIndex + Arg_ItemCount < Func_ItemsLength) {
-                            EnsureCapacity(Items.Length + Arg_ItemCount);
-                            Array.Copy(Arg_Items, 0, Items, _Count, Arg_ItemCount);
-                            _Count += Arg_ItemCount;
-                        } else { throw new ArgumentException("The start index + item count cannot be greater than item array length!", nameof(Arg_Items)); }
-                    } else { throw new ArgumentOutOfRangeException(nameof(Arg_StartIndex), Arg_StartIndex, "The start index cannot be negative or greater than item array length!"); }
-                } else { throw new ArgumentOutOfRangeException(nameof(Arg_ItemCount), Arg_ItemCount, "The item count cannot be greater than item array length or negative!"); }
-            } else { throw new ArgumentNullException(nameof(Arg_Items)); }
-        }
-
-        public void Add(FastList<T> Arg_Items, int Arg_StartIndex, int Arg_ItemCount) {
-            if (Arg_Items != null) {
-                int Func_ItemsCount = Arg_Items._Count;
-                if (Arg_ItemCount > -1 && Arg_ItemCount <= Func_ItemsCount) {
-                    if ((uint) Arg_StartIndex < (uint) Func_ItemsCount) {
-                        if (Arg_StartIndex + Arg_ItemCount < Func_ItemsCount) {
-                            EnsureCapacity(Items.Length + Arg_ItemCount);
-                            Array.Copy(Arg_Items.Items, 0, Items, _Count, Arg_ItemCount);
-                            _Count += Arg_ItemCount;
-                        } else { throw new ArgumentException("The start index + item count cannot be greater than item list count!", nameof(Arg_Items)); }
-                    } else { throw new ArgumentOutOfRangeException(nameof(Arg_StartIndex), Arg_StartIndex, "The start index cannot be negative or greater than item list count!"); }
-                } else { throw new ArgumentOutOfRangeException(nameof(Arg_ItemCount), Arg_ItemCount, "The item count cannot be greater than item list count or negative!"); }
-            } else { throw new ArgumentNullException(nameof(Arg_Items)); }
+        public void AddRange(FastList<T> Arg_Items, int Arg_StartIndex, int Arg_ItemCount) {
+            _ = Arg_Items ?? throw new ArgumentNullException(nameof(Arg_Items));
+            int Func_ItemsCount = Arg_Items._Count;
+            if (Arg_ItemCount > -1 && Arg_ItemCount <= Func_ItemsCount) {
+                if ((uint) Arg_StartIndex < (uint) Func_ItemsCount) {
+                    if (Arg_StartIndex + Arg_ItemCount < Func_ItemsCount) {
+                        EnsureCapacity(Items.Length + Arg_ItemCount);
+                        Array.Copy(Arg_Items.Items, 0, Items, _Count, Arg_ItemCount);
+                        _Count += Arg_ItemCount;
+                    } else { throw new ArgumentException("The start index + item count cannot be greater than item list count!", nameof(Arg_Items)); }
+                } else { throw new ArgumentOutOfRangeException(nameof(Arg_StartIndex), Arg_StartIndex, "The start index cannot be negative or greater than item list count!"); }
+            } else { throw new ArgumentOutOfRangeException(nameof(Arg_ItemCount), Arg_ItemCount, "The item count cannot be greater than item list count or negative!"); }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -184,66 +179,61 @@ namespace Reaper1121.SharpToolbox.Collections {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Insert(T[] Arg_Items, int Arg_DestinationIndex) {
-            if (Arg_Items != null) {
-                Insert(Arg_Items, Arg_Items.Length, 0, Arg_DestinationIndex);
-            } else { throw new ArgumentNullException(nameof(Arg_Items)); }
+        public void InsertRange(T[] Arg_Items, int Arg_DestinationIndex) {
+            _ = Arg_Items ?? throw new ArgumentNullException(nameof(Arg_Items));
+            InsertRange(Arg_Items, Arg_Items.Length, 0, Arg_DestinationIndex);
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void InsertRange(FastList<T> Arg_Items, int Arg_DestinationIndex) {
+            _ = Arg_Items ?? throw new ArgumentNullException(nameof(Arg_Items));
+            InsertRange(Arg_Items, Arg_Items._Count, 0, Arg_DestinationIndex);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Insert(FastList<T> Arg_Items, int Arg_DestinationIndex) {
-            if (Arg_Items != null) {
-                Insert(Arg_Items, Arg_Items._Count, 0, Arg_DestinationIndex);
-            } else { throw new ArgumentNullException(nameof(Arg_Items)); }
-        }
-
+        public void InsertRange(T[] Arg_Items, int Arg_InsertCount, int Arg_DestinationIndex) => InsertRange(Arg_Items, Arg_InsertCount, 0, Arg_DestinationIndex);
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Insert(T[] Arg_Items, int Arg_InsertCount, int Arg_DestinationIndex) => Insert(Arg_Items, Arg_InsertCount, 0, Arg_DestinationIndex);
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Insert(FastList<T> Arg_Items, int Arg_InsertCount, int Arg_DestinationIndex) => Insert(Arg_Items, Arg_InsertCount, 0, Arg_DestinationIndex);
+        public void InsertRange(FastList<T> Arg_Items, int Arg_InsertCount, int Arg_DestinationIndex) => InsertRange(Arg_Items, Arg_InsertCount, 0, Arg_DestinationIndex);
 
-        public void Insert(T[] Arg_InsertItems, int Arg_InsertCount, int Arg_StartIndex, int Arg_DestinationIndex) {
-            if (Arg_InsertItems != null) {
-                int Func_InsertItemsLength = Arg_InsertItems.Length;
-                if (Arg_InsertCount > -1 && Arg_InsertCount <= Func_InsertItemsLength) {
-                    if ((uint) Arg_StartIndex < (uint) Func_InsertItemsLength) {
-                        if (Arg_StartIndex + Arg_InsertCount <= Func_InsertItemsLength) {
-                            if ((uint) Arg_DestinationIndex <= (uint) _Count) {
-                                if (Arg_InsertCount != 0) {
-                                    EnsureCapacity(_Count + Arg_InsertCount);
-                                    if (Arg_DestinationIndex != _Count) {
-                                        Array.Copy(Items, Arg_DestinationIndex, Items, Arg_DestinationIndex + Arg_InsertCount, _Count - Arg_DestinationIndex);
-                                    }
-                                    Array.Copy(Arg_InsertItems, Arg_StartIndex, Items, Arg_DestinationIndex, Arg_InsertCount);
-                                    _Count += Arg_InsertCount;
+        public void InsertRange(T[] Arg_InsertItems, int Arg_InsertCount, int Arg_StartIndex, int Arg_DestinationIndex) {
+            _ = Arg_InsertItems ?? throw new ArgumentNullException(nameof(Arg_InsertItems));
+            int Func_InsertItemsLength = Arg_InsertItems.Length;
+            if (Arg_InsertCount > -1 && Arg_InsertCount <= Func_InsertItemsLength) {
+                if ((uint) Arg_StartIndex < (uint) Func_InsertItemsLength) {
+                    if (Arg_StartIndex + Arg_InsertCount <= Func_InsertItemsLength) {
+                        if ((uint) Arg_DestinationIndex <= (uint) _Count) {
+                            if (Arg_InsertCount != 0) {
+                                EnsureCapacity(_Count + Arg_InsertCount);
+                                if (Arg_DestinationIndex != _Count) {
+                                    Array.Copy(Items, Arg_DestinationIndex, Items, Arg_DestinationIndex + Arg_InsertCount, _Count - Arg_DestinationIndex);
                                 }
-                            } else { throw new ArgumentOutOfRangeException(nameof(Arg_DestinationIndex), Arg_DestinationIndex, "The destination index cannot be greater than list item count or negative!"); }
-                        } else { throw new ArgumentException("The start index + insert count cannot be greater than insert items array length!", nameof(Arg_InsertItems)); }
-                    } else { throw new ArgumentOutOfRangeException(nameof(Arg_StartIndex), Arg_StartIndex, "The start index cannot be negative or greater than or equal to insert item array length!"); }
-                } else { throw new ArgumentOutOfRangeException(nameof(Arg_InsertCount), Arg_InsertCount, "The insert item count cannot be greater than insert item array length or negative!"); }
-            } else { throw new ArgumentNullException(nameof(Arg_InsertItems)); }
+                                Array.Copy(Arg_InsertItems, Arg_StartIndex, Items, Arg_DestinationIndex, Arg_InsertCount);
+                                _Count += Arg_InsertCount;
+                            }
+                        } else { throw new ArgumentOutOfRangeException(nameof(Arg_DestinationIndex), Arg_DestinationIndex, "The destination index cannot be greater than list item count or negative!"); }
+                    } else { throw new ArgumentException("The start index + insert count cannot be greater than insert items array length!", nameof(Arg_InsertItems)); }
+                } else { throw new ArgumentOutOfRangeException(nameof(Arg_StartIndex), Arg_StartIndex, "The start index cannot be negative or greater than or equal to insert item array length!"); }
+            } else { throw new ArgumentOutOfRangeException(nameof(Arg_InsertCount), Arg_InsertCount, "The insert item count cannot be greater than insert item array length or negative!"); }
         }
 
-        public void Insert(FastList<T> Arg_InsertItems, int Arg_InsertCount, int Arg_StartIndex, int Arg_DestinationIndex) { // TODO: Fix issues of passing "this" as insert items
-            if (Arg_InsertItems != null) {
-                int Func_InsertItemsCount = Arg_InsertItems._Count;
-                if (Arg_InsertCount > -1 && Arg_InsertCount <= Func_InsertItemsCount) {
-                    if ((uint) Arg_StartIndex < (uint) Func_InsertItemsCount) {
-                        if (Arg_StartIndex + Arg_InsertCount <= Func_InsertItemsCount) {
-                            if ((uint) Arg_DestinationIndex <= (uint) _Count) {
-                                if (Arg_InsertCount != 0) {
-                                    EnsureCapacity(_Count + Arg_InsertCount);
-                                    if (Arg_DestinationIndex != _Count) {
-                                        Array.Copy(Items, Arg_DestinationIndex, Items, Arg_DestinationIndex + Arg_InsertCount, _Count - Arg_DestinationIndex);
-                                    }
-                                    Array.Copy(Arg_InsertItems.Items, Arg_StartIndex, Items, Arg_DestinationIndex, Arg_InsertCount);
-                                    _Count += Arg_InsertCount;
+        public void InsertRange(FastList<T> Arg_InsertItems, int Arg_InsertCount, int Arg_StartIndex, int Arg_DestinationIndex) { // TODO: Fix issues of passing "this" as insert items
+            _ = Arg_InsertItems ?? throw new ArgumentNullException(nameof(Arg_InsertItems));
+            int Func_InsertItemsCount = Arg_InsertItems._Count;
+            if (Arg_InsertCount > -1 && Arg_InsertCount <= Func_InsertItemsCount) {
+                if ((uint) Arg_StartIndex < (uint) Func_InsertItemsCount) {
+                    if (Arg_StartIndex + Arg_InsertCount <= Func_InsertItemsCount) {
+                        if ((uint) Arg_DestinationIndex <= (uint) _Count) {
+                            if (Arg_InsertCount != 0) {
+                                EnsureCapacity(_Count + Arg_InsertCount);
+                                if (Arg_DestinationIndex != _Count) {
+                                    Array.Copy(Items, Arg_DestinationIndex, Items, Arg_DestinationIndex + Arg_InsertCount, _Count - Arg_DestinationIndex);
                                 }
-                            } else { throw new ArgumentOutOfRangeException(nameof(Arg_DestinationIndex), Arg_DestinationIndex, "The destination index cannot be greater than list item count or negative!"); }
-                        } else { throw new ArgumentException("The start index + insert count cannot be greater than insert items count!", nameof(Arg_InsertItems)); }
-                    } else { throw new ArgumentOutOfRangeException(nameof(Arg_StartIndex), Arg_StartIndex, "The start index cannot be negative, greater than or equal to insert item list count!"); }
-                } else { throw new ArgumentOutOfRangeException(nameof(Arg_InsertCount), Arg_InsertCount, "The insert item count cannot be greater than insert item list count or negative!"); }
-            } else { throw new ArgumentNullException(nameof(Arg_InsertItems)); }
+                                Array.Copy(Arg_InsertItems.Items, Arg_StartIndex, Items, Arg_DestinationIndex, Arg_InsertCount);
+                                _Count += Arg_InsertCount;
+                            }
+                        } else { throw new ArgumentOutOfRangeException(nameof(Arg_DestinationIndex), Arg_DestinationIndex, "The destination index cannot be greater than list item count or negative!"); }
+                    } else { throw new ArgumentException("The start index + insert count cannot be greater than insert items count!", nameof(Arg_InsertItems)); }
+                } else { throw new ArgumentOutOfRangeException(nameof(Arg_StartIndex), Arg_StartIndex, "The start index cannot be negative, greater than or equal to insert item list count!"); }
+            } else { throw new ArgumentOutOfRangeException(nameof(Arg_InsertCount), Arg_InsertCount, "The insert item count cannot be greater than insert item list count or negative!"); }
         }
 
         public void Copy(FastList<T> Arg_List) => throw new NotImplementedException();
@@ -251,6 +241,7 @@ namespace Reaper1121.SharpToolbox.Collections {
         void System.Collections.ICollection.CopyTo(Array Arg_Array, int Arg_ArrayStartIndex) => Array.Copy(Items, 0, Arg_Array, Arg_ArrayStartIndex, _Count);
         public void CopyTo(T[] Arg_Array, int Arg_ArrayStartIndex) => Array.Copy(Items, 0, Arg_Array, Arg_ArrayStartIndex, _Count);
         public void CopyTo(int Arg_StartIndex, T[] Arg_DestinationArray, int Arg_DestinationStartIndex, int Arg_CopyCount) {
+            _ = Arg_DestinationArray ?? throw new ArgumentNullException(nameof(Arg_DestinationArray));
             if (Arg_CopyCount > -1) {
                 if ((uint) Arg_StartIndex < (uint) _Count) {
                     if (Arg_StartIndex + Arg_CopyCount <= _Count) {
@@ -281,6 +272,7 @@ namespace Reaper1121.SharpToolbox.Collections {
         }
 
         public int IndexOf(T Arg_Item, Comparison<T> Arg_Comparison) {
+            _ = Arg_Comparison ?? throw new ArgumentNullException(nameof(Arg_Comparison));
             int Func_ItemIndex = -1;
             int Func_Count = _Count;
             T[] Func_ListItems = Items;
@@ -294,6 +286,7 @@ namespace Reaper1121.SharpToolbox.Collections {
         }
 
         public int IndexOf(Predicate<T> Arg_ItemPredicate) {
+            _ = Arg_ItemPredicate ?? throw new ArgumentNullException(nameof(Arg_ItemPredicate));
             int Func_ItemIndex = -1;
             int Func_Count = _Count;
             T[] Func_ListItems = Items;
@@ -316,7 +309,7 @@ namespace Reaper1121.SharpToolbox.Collections {
         public bool Remove(T Arg_Item) {
             int Func_ItemIndex = IndexOf(Arg_Item);
             if (Func_ItemIndex != -1) {
-                Remove(Func_ItemIndex);
+                RemoveAt(Func_ItemIndex);
                 return true;
             }
             return false;
@@ -325,13 +318,13 @@ namespace Reaper1121.SharpToolbox.Collections {
         public bool RemoveUnordered(T Arg_Item) {
             int Func_ItemIndex = IndexOf(Arg_Item);
             if (Func_ItemIndex != -1) {
-                RemoveUnordered(Func_ItemIndex);
+                RemoveUnorderedAt(Func_ItemIndex);
                 return true;
             }
             return false;
         }
 
-        public void Remove(int Arg_Index) {
+        public void RemoveAt(int Arg_Index) {
             int Func_ListItemCount = _Count;
             if ((uint) Arg_Index < (uint) Func_ListItemCount) {
                 _Count = --Func_ListItemCount;
@@ -340,12 +333,12 @@ namespace Reaper1121.SharpToolbox.Collections {
                     Array.Copy(Func_ListItems, Arg_Index + 1, Func_ListItems, Arg_Index, Func_ListItemCount - Arg_Index);
                 }
                 if (RuntimeHelpers.IsReferenceOrContainsReferences<T>() == true) {
-                    Func_ListItems[Func_ListItemCount] = default;
+                    Func_ListItems[Func_ListItemCount] = default!;
                 }
             } else { throw new ArgumentOutOfRangeException(nameof(Arg_Index), Arg_Index, "The index cannot be greater than list item count or negative!"); }
         }
 
-        public void RemoveUnordered(int Arg_Index) {
+        public void RemoveUnorderedAt(int Arg_Index) {
             int Func_ListItemCount = _Count;
             if ((uint) Arg_Index < (uint) Func_ListItemCount) {
                 _Count = --Func_ListItemCount;
@@ -353,13 +346,13 @@ namespace Reaper1121.SharpToolbox.Collections {
                 if (Arg_Index < Func_ListItemCount) {
                     Func_ListItems[Arg_Index] = Func_ListItems[Func_ListItemCount];
                     if (RuntimeHelpers.IsReferenceOrContainsReferences<T>() == true) {
-                        Func_ListItems[Func_ListItemCount] = default;
+                        Func_ListItems[Func_ListItemCount] = default!;
                     }
                 }
             } else { throw new ArgumentOutOfRangeException(nameof(Arg_Index), Arg_Index, "The index cannot be greater than list item count or negative!"); }
         }
 
-        public void Remove(int Arg_StartIndex, int Arg_RemoveCount) {
+        public void RemoveAt(int Arg_StartIndex, int Arg_RemoveCount) {
             if (Arg_RemoveCount > -1) {
                 int Func_ListItemCount = _Count;
                 if ((uint) Arg_StartIndex < (uint) Func_ListItemCount) {
@@ -380,7 +373,7 @@ namespace Reaper1121.SharpToolbox.Collections {
             } else { throw new ArgumentException("The remove count cannot be negative!", nameof(Arg_RemoveCount)); }
         }
 
-        void IList<T>.RemoveAt(int Arg_Index) => Remove(Arg_Index);
+        void IList<T>.RemoveAt(int Arg_Index) => RemoveAt(Arg_Index);
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Clear() {
