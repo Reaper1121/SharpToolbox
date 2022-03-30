@@ -149,7 +149,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
         /// <returns><see langword="true"/> when the compared arrays match!</returns>
         public static bool CompareByRef<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2) where T : class {
             bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
-            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count == Arg_Array2.Count) == true) {
+            if (Func_ExitStatus == true && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count == Arg_Array2.Count) == true) {
                 for (int Loop_Index = Arg_Array1!.Count - 1; Loop_Index != -1; --Loop_Index) {
                     if (ReferenceEquals(UnsafeUtils.Reinterpret<T, object?>(Arg_Array1[Loop_Index]), UnsafeUtils.Reinterpret<T, object?>(Arg_Array2![Loop_Index])) == false) {
                         Func_ExitStatus = false;
@@ -161,7 +161,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
         }
         public static bool CompareByRef<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2, int Arg_ItemCount) where T : class {
             bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
-            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count <= Arg_ItemCount && Arg_Array2.Count <= Arg_ItemCount) == true) {
+            if (Func_ExitStatus == true && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count <= Arg_ItemCount && Arg_Array2.Count <= Arg_ItemCount) == true) {
                 for (--Arg_ItemCount; Arg_ItemCount != -1; --Arg_ItemCount) {
                     if (ReferenceEquals(UnsafeUtils.Reinterpret<T, object?>(Arg_Array1![Arg_ItemCount]), UnsafeUtils.Reinterpret<T, object?>(Arg_Array2![Arg_ItemCount])) == false) {
                         Func_ExitStatus = false;
@@ -174,7 +174,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
 
         public static bool Compare<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2) {
             bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
-            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count == Arg_Array2.Count) == true) {
+            if (Func_ExitStatus == true && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count == Arg_Array2.Count) == true) {
                 EqualityComparer<T> Func_ValueComparer = EqualityComparer<T>.Default;
                 for (int Loop_Index = Arg_Array1!.Count - 1; Loop_Index != -1; --Loop_Index) {
                     if (Func_ValueComparer.Equals(Arg_Array1[Loop_Index], Arg_Array2![Loop_Index]) == false) {
@@ -187,7 +187,7 @@ namespace Reaper1121.SharpToolbox.Extensions {
         }
         public static bool Compare<T>(this IList<T> Arg_Array1, IList<T> Arg_Array2, int Arg_ItemCount) {
             bool Func_ExitStatus = Arg_Array1 != Arg_Array2;
-            if (Func_ExitStatus == false && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count >= Arg_ItemCount && Arg_Array2.Count >= Arg_ItemCount) == true) {
+            if (Func_ExitStatus == true && (Func_ExitStatus = Arg_Array1 != null && Arg_Array2 != null && Arg_Array1.Count >= Arg_ItemCount && Arg_Array2.Count >= Arg_ItemCount) == true) {
                 EqualityComparer<T> Func_ValueComparer = EqualityComparer<T>.Default;
                 for (--Arg_ItemCount; Arg_ItemCount != -1; --Arg_ItemCount) {
                     if (Func_ValueComparer.Equals(Arg_Array1![Arg_ItemCount], Arg_Array2![Arg_ItemCount]) == false) {
