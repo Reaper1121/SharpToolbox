@@ -13,7 +13,7 @@ This library is currently in super early state and requires a lot of work:
 
 ## Build Requirements
 
- 1. .NET 6 SDK
+ 1. .NET 6+ SDK
 
 ## Build Instructions (Terminal):
 
