@@ -1,22 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Reaper1121.SharpToolbox</RootNamespace>
-        <Platforms>x64</Platforms>
+        <Platform>x64</Platform>
+        <RuntimeIdentifiers>win-x64;unix-x64</RuntimeIdentifiers>
         <Nullable>enable</Nullable>
         <AssemblyName>Reaper1121.SharpToolbox</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
         <Authors>Martynas Skirmantas</Authors>
         <PackageId>Reaper1121.SharpToolbox</PackageId>
         <Copyright>Martynas Skirmantas</Copyright>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <Version>0.0.1.4</Version>
+        <Version>0.0.1.5</Version>
         <PackageTags>MartynasSkirmantas Reaper1121</PackageTags>
-        <Description>A 64-Bit cross-platform library for .NET 5 and higher of various utitilies and other useful things to help out the development of projects.</Description>
+        <Description>A cross-platform library for .NET 6+ of various useful API's to help out C# developers.</Description>
         <RepositoryUrl>https://github.com/Reaper1121/SharpToolbox</RepositoryUrl>
         <PackageProjectUrl>https://github.com/Reaper1121/SharpToolbox</PackageProjectUrl>
-        <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
@@ -25,19 +27,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="EventListener.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Include="EventListener.cs" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Fody" Version="6.6.0">
+        <PackageReference Include="Fody" Version="6.6.4">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="InlineIL.Fody" Version="1.7.1">
+        <PackageReference Include="InlineIL.Fody" Version="1.7.4">
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
     </ItemGroup>
