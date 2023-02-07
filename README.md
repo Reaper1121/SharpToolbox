@@ -11,11 +11,11 @@ This library is currently in super early state and requires a lot of work:
  3. Requires optimization, clean up, API documentation, etc...
  4. The project as of right now is intended only for personal use.
 
-## Build Requirements
+## Build requirements:
 
  1. .NET 6+ SDK
 
-## Build Instructions (Terminal):
+## Build instructions (Terminal):
 
  1. Open your terminal (command prompt on windows) at the project directory.
- 2. Run the command: dotnet publish -c Release
+ 2. Run the command: "dotnet publish -c Release"
