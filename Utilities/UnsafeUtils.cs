@@ -96,7 +96,7 @@ public static class UnsafeUtils {
     /// <param name="Arg_Object">The object of source type</param>
     /// <returns>The object of destination type</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T ReinterpretCast<T>(object Arg_Object) where T : class {
+    public static T ReinterpretType<T>(object Arg_Object) where T : class {
         IL.DeclareLocals(false, new LocalVar[] {
             new LocalVar(TypeRef.Type<RuntimeTypeHandle>())
         });
